@@ -16,8 +16,6 @@ const handleCardClick = (clickedPlaylist) => {
     });
 };
 
-// console.log('Banners:', banners);
-// console.log('Playlists:', playlists);
 </script>
 
 <template>
