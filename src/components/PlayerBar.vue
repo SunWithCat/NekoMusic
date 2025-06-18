@@ -5,11 +5,16 @@ import IconNext from './icons/IconNext.vue';
 import IconPause from './icons/IconPause.vue';
 import IconPlay from './icons/IconPlay.vue';
 import IconPrev from './icons/IconPrev.vue';
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const playerStore = usePlayerStore();
 const audioRef = ref(null);
 
 const isSeeking = ref(false);
+
+const router = useRouter(); // 2. 初始化 router 用于跳转
+const route = useRoute();   // 3. 初始化 route 用于获取当前路由信息
 
 const audioSrc = computed(() => {
     if (playerStore.currentSong) {
@@ -17,6 +22,26 @@ const audioSrc = computed(() => {
     }
     return null;
 })
+
+// 新增一个计算属性，判断当前是否就在这首歌的详情页
+const isAlreadyOnDetailPage = computed(() => {
+    if (!playerStore.currentSong) return false;
+    // 如果当前路由名是 'song-detail' 且 路由的id和当前播放歌曲的id一致
+    return route.name === 'song-detail' && Number(route.params.id) === playerStore.currentSong.id;
+});
+
+// 新增点击事件处理函数
+const goToSongDetail = () => {
+    // 如果没有当前歌曲，或者已经在详情页，则不执行任何操作
+    if (!playerStore.currentSong || isAlreadyOnDetailPage.value) {
+        return;
+    }
+    // 否则，跳转到歌曲详情页
+    router.push({
+        name: 'song-detail',
+        params: { id: playerStore.currentSong.id }
+    });
+};
 
 watch(audioSrc, (newSrc) => {
     if (newSrc && audioRef.value) {
@@ -28,14 +53,6 @@ watch(audioSrc, (newSrc) => {
         })
     }
 })
-
-// watch(() => playerStore.isPlaying, (newIsPlaying) => {
-//     if (!audioRef.value) return; // 确保audio元素已加载
-
-//     if (!newIsPlaying) { // 只处理暂停逻辑
-//         audioRef.value.pause(); // 调用pause方法
-//     }
-// });
 
 const formatDuration = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return '00:00';
@@ -121,10 +138,12 @@ const progressPercentage = computed(() => {
             :value="playerStore.currentTime" :disabled="playerStore.duration <= 0" @input="handleSeek"
             @mousedown="isSeeking = true" @mouseup="endSeek"
             :style="{ '--progress-percent': `${progressPercentage}%` }">
-        <div v-if="playerStore.currentSong" class="song-info">
+        <div v-if="playerStore.currentSong" class="song-info" :class="{ clickable: !isAlreadyOnDetailPage }"
+            @click="goToSongDetail">
             <img :src="playerStore.currentSong.coverImgUrl" alt="cover" class="song-cover">
             <div class="song-details">
                 <p class="song-name">{{ playerStore.currentSong.name }}</p>
+                <p class="song-artist">{{ playerStore.currentSong.artist }}</p>
             </div>
         </div>
         <div v-else class="song-info">
@@ -173,6 +192,7 @@ const progressPercentage = computed(() => {
     align-items: center;
     gap: 12px;
     overflow: hidden;
+    justify-self: start;
 }
 
 .song-cover {
@@ -192,6 +212,17 @@ const progressPercentage = computed(() => {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.song-artist {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.song-info.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .other-controls {

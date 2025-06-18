@@ -1,11 +1,12 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { playlists } from '../data/home.js';
 import { usePlayerStore } from '@/stores/player.js';
 
 
 const route = useRoute();
+const router = useRouter();
 const playerStore = usePlayerStore();
 
 const currentPlaylist = computed(() => {
@@ -19,6 +20,13 @@ const currentPlaylist = computed(() => {
 const playSong = (song, index) => {
     if (!currentPlaylist.value) return;
     playerStore.setPlaylist(currentPlaylist.value.songs, index);
+
+    router.push({
+        name: 'song-detail',
+        params: {
+            id: song.id
+        }
+    });
 };
 
 const formatDuration = (seconds) => {
