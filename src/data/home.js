@@ -1,5 +1,3 @@
-// src/data/home.js
-
 export const banners = [
   { id: 1, pic: 'https://p1.music.126.net/UNrJYRekTiW_ihDdPad5_g==/109951171292583922.jpg?imageView&quality=89' },
   { id: 2, pic: 'https://p1.music.126.net/o1eM0wVcaiIEn1NfbJg4sA==/109951171292608903.jpg?imageView&quality=89' },

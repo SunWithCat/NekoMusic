@@ -8,8 +8,6 @@ import { usePlayerStore } from '@/stores/player.js';
 const route = useRoute();
 const playerStore = usePlayerStore();
 
-// const playlistId = route.params.id;
-
 const currentPlaylist = computed(() => {
     const playlistId = route.params.id;
     console.log(`正在查找 ID: ${playlistId} (类型: ${typeof playlistId})`);

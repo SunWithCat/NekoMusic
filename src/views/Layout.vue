@@ -1,12 +1,34 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router';
 import PlayerBar from '@/components/PlayerBar.vue';
+
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+
+const originalLogoText = 'NekoMusic';
+const backendMessage = ref('正在从后端加载数据...');
+const showBackendMessage = ref(false);
+
+onMounted(async () => { // 生命周期钩子
+    try {
+        const response = await axios.get('http://localhost:8080/api/hello'); // 发送http请求，GET请求
+        backendMessage.value = response.data; // 赋值
+    } catch (error) {
+        backendMessage.value = '加载失败 T_T: ' + error.message;
+    }
+});
+
+const toggleLogoContent = () => {
+    showBackendMessage.value = !showBackendMessage.value;
+};
 </script>
 
 <template>
     <div class="layout-container">
         <header class="header">
-            <div class="logo">冈易云音乐</div>
+            <div class="logo" @click="toggleLogoContent">
+                {{ showBackendMessage ? backendMessage : originalLogoText }}
+            </div>
             <nav class="navigation">
                 <RouterLink to="/" class="nav-link">发现音乐</RouterLink>
                 <RouterLink to="/search" class="nav-link">搜索</RouterLink>
@@ -29,7 +51,6 @@ import PlayerBar from '@/components/PlayerBar.vue';
     flex-direction: column;
     height: 100vh;
     padding-bottom: 70px;
-    /* 为播放栏留出空间 */
 }
 
 .header {
@@ -85,10 +106,8 @@ import PlayerBar from '@/components/PlayerBar.vue';
     left: 0;
     right: 0;
     height: 70px;
-    /* 播放栏的高度 */
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
     z-index: 1000;
-    /* 确保播放栏在最上层 */
 }
 </style>
