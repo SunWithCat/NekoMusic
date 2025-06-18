@@ -1,6 +1,6 @@
 <script setup>
 import { usePlayerStore } from '@/stores/player';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, nextTick } from 'vue';
 import IconNext from './icons/IconNext.vue';
 import IconPause from './icons/IconPause.vue';
 import IconPlay from './icons/IconPlay.vue';
@@ -11,13 +11,31 @@ const audioRef = ref(null);
 
 const isSeeking = ref(false);
 
-watch(() => playerStore.isPlaying, (newIsPlaying) => {
-    if (!audioRef.value) return; // 确保audio元素已加载
-
-    if (!newIsPlaying) { // 只处理暂停逻辑
-        audioRef.value.pause(); // 调用pause方法
+const audioSrc = computed(() => {
+    if (playerStore.currentSong) {
+        return `http://localhost:8080/api/music/${playerStore.currentSong.id}`
     }
-});
+    return null;
+})
+
+watch(audioSrc, (newSrc) => {
+    if (newSrc && audioRef.value) {
+        nextTick(() => {
+            audioRef.value.load();
+            if (playerStore.isPlaying) {
+                audioRef.value.play().catch((e) => console.error('自动播放失败：', e))
+            }
+        })
+    }
+})
+
+// watch(() => playerStore.isPlaying, (newIsPlaying) => {
+//     if (!audioRef.value) return; // 确保audio元素已加载
+
+//     if (!newIsPlaying) { // 只处理暂停逻辑
+//         audioRef.value.pause(); // 调用pause方法
+//     }
+// });
 
 const formatDuration = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return '00:00';
@@ -74,18 +92,17 @@ const endSeek = () => {
 };
 
 const handleTogglePlay = () => {
-    if (!audioRef.value) return;
+    if (!audioRef.value || !playerStore.currentSong) return;
 
     if (playerStore.isPlaying) {
         audioRef.value.pause();
-        playerStore.isPlaying = false;
     } else {
         // 尝试播放，如果失败则捕获错误
         audioRef.value.play().catch(err => {
             console.warn("播放失败，可能需要用户交互。", err);
             playerStore.isPlaying = false; // 播放失败时重置状态
         });
-        playerStore.isPlaying = true;
+        playerStore.isPlaying = !playerStore.isPlaying;
     }
 };
 
@@ -134,8 +151,9 @@ const progressPercentage = computed(() => {
             </div>
         </div>
     </div>
-    <audio ref="audioRef" :src=null @ended="playerStore.playNext()" @timeupdate="handleTimeUpdate"
-        @loadedmetadata="handleLoadedMetadata" @error="handleAudioError"></audio>
+    <audio ref="audioRef" :src="audioSrc" @ended="playerStore.playNext()" @timeupdate="handleTimeUpdate"
+        @loadedmetadata="handleLoadedMetadata" @error="handleAudioError" @play="playerStore.isPlaying = true"
+        @pause="playerStore.isPlaying = false"></audio>
 </template>
 
 <style scoped>

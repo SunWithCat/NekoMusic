@@ -14,8 +14,8 @@ public class CorsConfig {
             @SuppressWarnings("null")
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // 允许所有路径的跨域请求
-                        .allowedOrigins("http://localhost:5173") // !!!这里改成你的Vue项目的地址!!!
+                registry.addMapping("/**") 
+                        .allowedOrigins("http://localhost:5173") 
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
