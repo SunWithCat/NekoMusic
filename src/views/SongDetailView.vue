@@ -81,7 +81,7 @@ const goBack = () => {
 
 <template>
     <div class="song-detail-container">
-        <button @click="goBack" class="back-button">← 返回</button>
+        <button @click="goBack" class="back-button">返回</button>
         <div v-if="currentSong" class="song-content">
             <div class="cover-section">
                 <img :src="currentSong.coverImgUrl" :alt="currentSong.name" class="song-cover">

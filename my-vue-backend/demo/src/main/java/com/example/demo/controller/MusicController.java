@@ -19,18 +19,14 @@ import java.nio.file.Paths;
 public class MusicController {
 
     // 定义音乐文件存放的基础路径
-    // Paths.get("src/main/resources/music") 会获取到我们刚刚创建的文件夹
     private final Path musicStorageLocation = Paths.get("src/main/resources/music").toAbsolutePath().normalize();
 
     @GetMapping("/music/{songId}") // 定义接口地址，{songId} 是一个占位符
     public ResponseEntity<Resource> getMusicFile(@PathVariable String songId) {
         try {
-            // 根据songId拼接出完整的文件路径，这里我们假设都是 .mp3 格式
-            // 如果你有别的格式，可以在这里做更复杂的判断
             Path filePath = this.musicStorageLocation.resolve(songId + ".mp3").normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
-            // 检查文件是否存在且可读
             if (resource.exists() && resource.isReadable()) {
                 // 设置响应头，告诉浏览器这是一个音频文件流
                 return ResponseEntity.ok()
@@ -42,7 +38,6 @@ public class MusicController {
                 return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException ex) {
-            // 如果路径转换URL失败，返回服务器内部错误
             return ResponseEntity.internalServerError().build();
         }
     }

@@ -27,6 +27,7 @@ const toggleLogoContent = () => {
     <div class="layout-container">
         <header class="header">
             <div class="logo" @click="toggleLogoContent">
+                <img src="../assets/logo.svg" class="svg-img">
                 {{ showBackendMessage ? backendMessage : originalLogoText }}
             </div>
             <nav class="navigation">
@@ -67,6 +68,17 @@ const toggleLogoContent = () => {
     font-size: 20px;
     font-weight: bold;
     margin-right: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.svg-img {
+    width: 27px;
+    height: 27px;
+    padding-right: 3px;
+    color: white;
+    /* 将SVG颜色设置为白色，与header文本颜色一致 */
 }
 
 .navigation {
