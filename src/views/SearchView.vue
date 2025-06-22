@@ -81,10 +81,10 @@ const formatDuration = (seconds) => {
         </div>
         <div class="results-container">
             <div v-if="isLoading" class="loading-state">
-                正在努力搜索中...
+                <el-skeleton :row="5" animated />
             </div>
             <div v-else-if="!searchQuery.trim()" class="empty-state">
-                试着搜索点什么吧
+                <el-empty description="试着搜索点什么吧" />
             </div>
             <div v-else-if="foundPlaylists.length == 0 && foundSongs.length == 0" class="no-results">
                 <p>未能找到与“{{ searchQuery }}”相关的任何内容</p>

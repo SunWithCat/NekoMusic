@@ -74,7 +74,7 @@ watch(currentLineIndex, (newIndex) => {
 
 const goBack = () => {
     console.log('Inspecting the router object:', router);
-    router.back(); // 修改后的代码，这是正确的方式
+    router.back();
 };
 
 </script>

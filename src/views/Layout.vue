@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import PlayerBar from '@/components/PlayerBar.vue';
 
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { onMounted, ref } from 'vue';
 const originalLogoText = 'NekoMusic';
 const backendMessage = ref('正在从后端加载数据...');
 const showBackendMessage = ref(false);
+const route = useRoute();
 
 onMounted(async () => { // 生命周期钩子
     try {
@@ -37,7 +38,11 @@ const toggleLogoContent = () => {
         </header>
 
         <main class="main-content">
-            <RouterView />
+            <RouterView v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" :key="route.path" />
+                </transition>
+            </RouterView>
         </main>
 
     </div>
@@ -77,8 +82,6 @@ const toggleLogoContent = () => {
     width: 27px;
     height: 27px;
     padding-right: 3px;
-    color: white;
-    /* 将SVG颜色设置为白色，与header文本颜色一致 */
 }
 
 .navigation {
@@ -121,5 +124,15 @@ const toggleLogoContent = () => {
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
     z-index: 1000;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

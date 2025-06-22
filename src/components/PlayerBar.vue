@@ -13,8 +13,8 @@ const audioRef = ref(null);
 
 const isSeeking = ref(false);
 
-const router = useRouter(); // 2. 初始化 router 用于跳转
-const route = useRoute();   // 3. 初始化 route 用于获取当前路由信息
+const router = useRouter(); // 初始化 router 用于跳转
+const route = useRoute();   // 初始化 route 用于获取当前路由信息
 
 const audioSrc = computed(() => {
     if (playerStore.currentSong) {
@@ -64,7 +64,7 @@ const formatDuration = (seconds) => {
 };
 
 const handleTimeUpdate = () => {
-    if (isSeeking.value) return;
+    if (isSeeking.value) return; // 取消更新时间
     if (audioRef.value) {
         playerStore.updateCurrentTime(audioRef.value.currentTime);
     }
@@ -251,20 +251,15 @@ const progressPercentage = computed(() => {
     color: #ec4141;
 }
 
-/* 中间的播放/暂停按钮可以更大更突出 */
 .play-pause-btn {
     width: 40px;
     height: 40px;
     color: #ec4141;
-    /* 主色调 */
     transition: transform 0.2s;
 }
 
 .play-pause-btn:hover {
     transform: scale(1.1);
-    /* 鼠标悬浮时放大 */
-    color: #ec4141;
-    /* 保持红色 */
 }
 
 .player-controls-wrapper {
@@ -273,12 +268,10 @@ const progressPercentage = computed(() => {
     align-items: center;
     gap: 5px;
     width: 70%;
-    /* 让中间区域占据一定宽度 */
 }
 
 .controls {
     justify-self: center;
-    /* 这在 Grid 布局下生效 */
     display: flex;
     align-items: center;
     gap: 20px;
@@ -287,15 +280,12 @@ const progressPercentage = computed(() => {
 .progress-bar-top {
     position: absolute;
     top: -5px;
-    /* 让它稍微高出播放器一点，方便点击 */
     left: 0;
     width: 100%;
     height: 6px;
-    /* 增加可点击区域 */
     margin: 0;
     -webkit-appearance: none;
     appearance: none;
-
     background-color: transparent;
     cursor: pointer;
 }
@@ -326,7 +316,6 @@ const progressPercentage = computed(() => {
     border-radius: 50%;
     background: #ec4141;
     margin-top: -5px;
-    /* 垂直居中 */
 }
 
 .main-controls {

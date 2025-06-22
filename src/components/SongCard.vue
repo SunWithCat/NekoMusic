@@ -1,4 +1,6 @@
 <script setup>
+import IconPlay from './icons/IconPlay.vue';
+
 
 const props = defineProps({
     coverImgUrl: {
@@ -32,7 +34,7 @@ const formatPlayCount = (count) => {
 }
 
 function onCardClick(event) {
-    event.stopPropagation();
+    event.stopPropagation(); // 停止事件冒泡
     emit('click-card', props);
 }
 
@@ -40,7 +42,12 @@ function onCardClick(event) {
 
 <template>
     <div class="playlist-card" @click="onCardClick">
-        <img :src="coverImgUrl" alt="playlist-cover" class="playlist-cover">
+        <div class="cover-wrapper">
+            <img :src="coverImgUrl" alt="playlist-cover" class="playlist-cover">
+            <div class="play-icon-overlay">
+                <IconPlay />
+            </div>
+        </div>
         <p class="playlist-name">{{ name }}</p>
         <p class="playlist-playcount">播放量：{{ formatPlayCount(playCount) }}</p>
     </div>
@@ -50,6 +57,8 @@ function onCardClick(event) {
 .playlist-card {
     cursor: pointer;
     transition: transform 0.3s ease;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .playlist-card:hover {
@@ -77,5 +86,28 @@ function onCardClick(event) {
     font-size: 12px;
     color: black;
     margin-top: 4px;
+}
+
+.cover-wrapper {
+    position: relative;
+}
+
+.play-icon-overlay {
+    position: absolute;
+    right: 5%;
+    bottom: 5%;
+    width: 20%;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.playlist-card:hover .play-icon-overlay {
+    opacity: 1;
 }
 </style>

@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { playlists } from '../data/home.js';
 import { usePlayerStore } from '@/stores/player.js';
+import { ElMessage } from 'element-plus';
 
 
 const route = useRoute();
@@ -20,7 +21,11 @@ const currentPlaylist = computed(() => {
 const playSong = (song, index) => {
     if (!currentPlaylist.value) return;
     playerStore.setPlaylist(currentPlaylist.value.songs, index);
-
+    ElMessage({
+        message: `已将《${song.name}》添加到播放列表`,
+        type: 'success',
+        duration: 2000
+    });
     router.push({
         name: 'song-detail',
         params: {
@@ -37,19 +42,22 @@ const formatDuration = (seconds) => {
     const formattedSecs = String(secs).padStart(2, '0');
 
     return `${formattedMins}:${formattedSecs}`;
-}
+};
 
 </script>
 
 <template>
     <div class="playlist-detail-container">
         <div v-if="currentPlaylist" class="content">
-            <img :src="currentPlaylist.coverImgUrl" alt="cover" class="cover-image">
+            <div class="des">
+                <img :src="currentPlaylist.coverImgUrl" alt="cover" class="cover-image">
+                <h3>Descriptions</h3>
+            </div>
             <div class="details-wrapper">
                 <div class="info">
                     <h1>{{ currentPlaylist.name }}</h1>
                     <p>播放量：{{ currentPlaylist.playCount }}</p>
-                    <router-link to="/">返回首页</router-link>
+                    <router-link to="/" class="back-link">返回首页</router-link>
                 </div>
                 <div class="song-list">
                     <div class="song-item header">
@@ -68,10 +76,9 @@ const formatDuration = (seconds) => {
                 </div>
             </div>
         </div>
-
         <div v-else class="not-found">
             <p>没有找到这个歌单哦。</p>
-            <router-link to="/">返回首页</router-link>
+            <router-link to="/" class="back-link">返回首页</router-link>
         </div>
     </div>
 </template>
@@ -106,11 +113,17 @@ const formatDuration = (seconds) => {
 .back-link {
     display: inline-block;
     margin-top: 20px;
-    background-color: #eee;
+    background-color: #e0e0e0;
     padding: 8px 16px;
     border-radius: 16px;
     text-decoration: none;
     color: #333;
+}
+
+.content-des {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
 }
 
 .info {
@@ -128,15 +141,6 @@ const formatDuration = (seconds) => {
     color: #666;
 }
 
-.info a {
-    display: inline-block;
-    margin-top: 20px;
-    background-color: #eee;
-    padding: 8px 16px;
-    border-radius: 16px;
-    text-decoration: none;
-    color: #333
-}
 
 .song-list {
     flex-grow: 1;
@@ -194,6 +198,5 @@ const formatDuration = (seconds) => {
 .duration {
     color: #999;
     text-align: right;
-    /* 让时长靠右对齐，更美观 */
 }
 </style>
