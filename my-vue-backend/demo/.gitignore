@@ -34,3 +34,6 @@ build/
 
 # NekoMusic custom ignores
 /src/main/resources/music/*
+
+# 忽略特定环境的配置文件
+application-dev.properties
