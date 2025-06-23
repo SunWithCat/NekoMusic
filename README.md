@@ -1,11 +1,11 @@
 # NekoMusic仿站项目
 
 ## 项目简介
-本项目为个人学习与研究用途，实现了基础的音乐播放、歌单浏览、搜索等功能，前后端分离，适合前端和后端开发者参考和二次开发。
+本项目为个人学习与研究用途，实现了基础的音乐播放、歌单浏览、搜索等功能，前后端分离.
 
 ## 技术栈
 - 前端：Vue 3、TypeScript、Vite、Pinia、Vue Router、CSS3
-- 后端：Spring Boot、Java 17
+- 后端：Spring Boot、MySQL、Java 17
 - 其他：本地 Mock 数据、前后端分离架构
 
 ## 功能特性
